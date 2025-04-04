@@ -4,7 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farming Simulator</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Menghubungkan file CSS -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+        .game-area {
+            flex: 2;
+            background-color: #e0e0e0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .store {
+            flex: 1;
+            background-color: #d0d0d0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .inventory, .market {
+            margin-top: 20px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        .section {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 
@@ -13,14 +54,24 @@
     <div class="game-area">
         <h2>Peternakan</h2>
         <p>Uang: <span id="money">100</span> Uang</p>
-        <h3>Tanam Tanaman</h3>
-        <button class="button" onclick="plantCrop()">Tanam Padi</button>
-        
+        <div>
+            <h3>Tanam Tanaman</h3>
+            <button class="button" onclick="plantCrop()">Tanam Padi</button>
+        </div>
         <div class="inventory">
             <h3>Inventory</h3>
             <ul id="inventory-list">
-                <!-- Daftar item inventory akan diperbarui di sini -->
+                <!-- List of items will be populated here -->
             </ul>
+        </div>
+        <!-- Tombol untuk menjual padi atau item lainnya -->
+        <div>
+            <h3>Jual Item</h3>
+            <button class="button" onclick="sellItem()">Jual Padi</button>
+        </div>
+        <div>
+            <h3>Grass Growth</h3>
+            <p id="grass-timer">Waktu Tumbuh: 5s</p>
         </div>
     </div>
 
@@ -36,59 +87,109 @@
                 <li>Alat Penyiram (100 Uang)</li>
             </ul>
         </div>
+        <!-- Container untuk menampilkan jumlah padi terkumpul -->
+        <div class="section">
+            <h3>Jumlah Padi Terkumpul</h3>
+            <p id="rice-count">Padi: 0</p>
+        </div>
     </div>
 </div>
 
 <script>
-// Memuat data dari localStorage
-let money = localStorage.getItem('money') ? parseInt(localStorage.getItem('money')) : 100;  // Default uang adalah 100
-let inventory = JSON.parse(localStorage.getItem('inventory')) || [];  // Memuat inventory atau membuat array kosong jika belum ada
+    // Memuat data dari localStorage
+    let money = localStorage.getItem('money') ? parseInt(localStorage.getItem('money')) : 100;  // Default uang adalah 100
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];  // Memuat inventory atau membuat array kosong jika belum ada
+    let harvestedRice = JSON.parse(localStorage.getItem('harvestedRice')) || 0;  // Menyimpan hasil padi yang sudah dipanen
+    let grassTimer = 5; // Waktu tumbuh rumput (5 detik)
+    let grassGrowthInterval;
 
-// Fungsi untuk membeli barang (bibit padi)
-function buyItem() {
-    if (money >= 50) {
-        money -= 50;  // Kurangi uang
-        inventory.push('Padi (Bibit)');  // Menambah satu item bibit padi ke inventory
-        updateUI();  // Memperbarui tampilan UI
-        saveToLocalStorage();  // Menyimpan perubahan ke localStorage
-    } else {
-        alert('Uang tidak cukup untuk membeli Padi!');
+    // Fungsi untuk membeli barang (bibit padi)
+    function buyItem() {
+        if (money >= 50) {
+            money -= 50;  // Kurangi uang
+            inventory.push('Padi (Bibit)');  // Tambahkan bibit padi ke inventory
+            updateUI();
+            saveToLocalStorage();  // Simpan perubahan ke localStorage
+        } else {
+            alert('Uang tidak cukup untuk membeli Padi!');
+        }
     }
-}
 
-// Fungsi untuk menanam tanaman (bibit padi)
-function plantCrop() {
-    if (inventory.includes('Padi (Bibit)')) {
-        inventory.splice(inventory.indexOf('Padi (Bibit)'), 1);  // Hapus bibit padi dari inventory
-        alert('Tanaman Padi telah ditanam!');
-        updateUI();
-        saveToLocalStorage();  // Menyimpan perubahan ke localStorage
-    } else {
-        alert('Anda belum membeli Bibit Padi!');
+    // Fungsi untuk menanam tanaman
+    function plantCrop() {
+        if (inventory.includes('Padi (Bibit)')) {
+            inventory.splice(inventory.indexOf('Padi (Bibit)'), 1);  // Hapus bibit padi dari inventory
+            alert('Tanaman Padi telah ditanam!');
+            updateUI();
+            saveToLocalStorage();  // Simpan perubahan ke localStorage
+        } else {
+            alert('Anda belum membeli Bibit Padi!');
+        }
     }
-}
 
-// Fungsi untuk memperbarui tampilan uang dan inventory
-function updateUI() {
-    document.getElementById('money').innerText = money;
-    const inventoryList = document.getElementById('inventory-list');
-    inventoryList.innerHTML = ''; // Menghapus isi inventory
+    // Fungsi untuk otomatis memulai pertumbuhan rumput (grass)
+    function startGrassGrowth() {
+        grassTimer = 5;  // Reset timer ke 5 detik
+        document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
+        
+        // Mengatur interval untuk pertumbuhan rumput otomatis setiap 5 detik
+        setInterval(() => {
+            grassTimer--;
+            document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
+            
+            if (grassTimer <= 0) {
+                // Setelah timer selesai, berikan padi ke inventory
+                harvestedRice += 1;  // Menambah 1 padi ke hasil yang sudah dipanen
+                alert('Rumput telah tumbuh! Anda mendapatkan 1 Padi.');
+                saveToLocalStorage();  // Simpan perubahan ke localStorage
+                
+                // Reset timer untuk pertumbuhan berikutnya
+                grassTimer = 5;
+            }
+        }, 5000);  // 5000ms = 5 detik
+    }
 
-    // Tampilkan jumlah bibit padi di inventory
-    const riceCount = inventory.filter(item => item === 'Padi (Bibit)').length;
-    const li = document.createElement('li');
-    li.textContent = `Bibit Padi: ${riceCount} buah`;
-    inventoryList.appendChild(li);
-}
+    // Fungsi untuk menjual item (termasuk Padi)
+    function sellItem() {
+        if (harvestedRice > 0) {
+            let moneyEarned = harvestedRice * 30;  // Menghitung uang yang didapat dari hasil padi
+            money += moneyEarned;
+            harvestedRice = 0;  // Mengosongkan hasil padi yang sudah dijual
+            alert('Anda telah menjual ' + moneyEarned / 30 + ' Padi! Mendapatkan ' + moneyEarned + ' Uang.');
+            updateUI();
+            saveToLocalStorage();  // Simpan perubahan ke localStorage
+        } else {
+            alert('Anda tidak memiliki Padi untuk dijual!');
+        }
+    }
 
-// Fungsi untuk menyimpan data ke localStorage
-function saveToLocalStorage() {
-    localStorage.setItem('money', money);  // Menyimpan uang
-    localStorage.setItem('inventory', JSON.stringify(inventory));  // Menyimpan inventory
-}
+    // Fungsi untuk memperbarui tampilan uang dan inventory
+    function updateUI() {
+        document.getElementById('money').innerText = money;
+        const inventoryList = document.getElementById('inventory-list');
+        inventoryList.innerHTML = '';
+        inventory.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            inventoryList.appendChild(li);
+        });
+        
+        // Memperbarui jumlah padi yang sudah dipanen di Toko
+        document.getElementById('rice-count').innerText = 'Padi: ' + harvestedRice;
+    }
 
-// Inisialisasi UI dengan data dari localStorage
-updateUI();
+    // Fungsi untuk menyimpan data ke localStorage
+    function saveToLocalStorage() {
+        localStorage.setItem('money', money);  // Menyimpan uang
+        localStorage.setItem('inventory', JSON.stringify(inventory));  // Menyimpan inventory
+        localStorage.setItem('harvestedRice', JSON.stringify(harvestedRice));  // Menyimpan hasil padi yang sudah dipanen
+    }
+
+    // Inisialisasi UI dengan data dari localStorage
+    updateUI();
+
+    // Mulai otomatis pertumbuhan rumput saat halaman dimuat
+    startGrassGrowth();
 </script>
 
 </body>
