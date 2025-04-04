@@ -54,6 +54,11 @@
     </div>
 </div>
 
+<!-- Admin Reset Button -->
+<div class="admin-section">
+    <button class="button" onclick="resetGame()">Reset Permainan (Admin)</button>
+</div>
+
 <script>
     // Memuat data dari localStorage
     let money = localStorage.getItem('money') ? parseInt(localStorage.getItem('money')) : 100;  // Default uang adalah 100
@@ -152,6 +157,26 @@
         localStorage.setItem('money', money);  // Menyimpan uang
         localStorage.setItem('inventory', JSON.stringify(inventory));  // Menyimpan inventory
         localStorage.setItem('harvestedRice', JSON.stringify(harvestedRice));  // Menyimpan hasil padi yang sudah dipanen
+    }
+
+    // Fungsi untuk mereset permainan (dengan akses admin)
+    function resetGame() {
+        const adminPassword = prompt('Masukkan password admin untuk reset permainan:');
+        
+        // Cek password (contohnya: password = "admin123")
+        if (adminPassword === 'admin123') {
+            if (confirm('Anda yakin ingin mereset permainan? Semua progres akan hilang.')) {
+                // Reset semua data permainan
+                localStorage.clear();
+                money = 100;
+                inventory = [];
+                harvestedRice = 0;
+                alert('Permainan telah direset!');
+                updateUI();
+            }
+        } else {
+            alert('Password salah! Anda tidak memiliki akses untuk mereset permainan.');
+        }
     }
 
     // Inisialisasi UI dengan data dari localStorage
