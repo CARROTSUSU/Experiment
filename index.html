@@ -66,6 +66,10 @@
             <h3>Jual Item</h3>
             <button class="button" onclick="sellItem()">Jual Padi</button>
         </div>
+        <div>
+            <h3>Grass Growth</h3>
+            <p id="grass-timer">Waktu Tumbuh: 5s</p>
+        </div>
     </div>
 
     <!-- Store (Market) -->
@@ -87,6 +91,8 @@
     // Memuat data dari localStorage
     let money = localStorage.getItem('money') ? parseInt(localStorage.getItem('money')) : 100;  // Default uang adalah 100
     let inventory = JSON.parse(localStorage.getItem('inventory')) || [];  // Memuat inventory atau membuat array kosong jika belum ada
+    let grassTimer = 5; // Waktu tumbuh rumput (5 detik)
+    let grassGrowthInterval;
 
     // Fungsi untuk membeli barang (bibit padi)
     function buyItem() {
@@ -111,6 +117,28 @@
         } else {
             alert('Anda belum membeli Bibit Padi!');
         }
+    }
+
+    // Fungsi untuk otomatis memulai pertumbuhan rumput (grass)
+    function startGrassGrowth() {
+        grassTimer = 5;  // Reset timer ke 5 detik
+        document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
+        
+        // Mengatur interval untuk pertumbuhan rumput otomatis setiap 5 detik
+        setInterval(() => {
+            grassTimer--;
+            document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
+            
+            if (grassTimer <= 0) {
+                // Setelah timer selesai, berikan padi ke inventory
+                inventory.push('Padi');  // Memberikan 1 padi ke inventory
+                alert('Rumput telah tumbuh! Anda mendapatkan 1 Padi.');
+                saveToLocalStorage();  // Simpan perubahan ke localStorage
+                
+                // Reset timer untuk pertumbuhan berikutnya
+                grassTimer = 5;
+            }
+        }, 5000);  // 5000ms = 5 detik
     }
 
     // Fungsi untuk menjual item secara umum (termasuk Padi)
@@ -147,6 +175,9 @@
 
     // Inisialisasi UI dengan data dari localStorage
     updateUI();
+
+    // Mulai otomatis pertumbuhan rumput saat halaman dimuat
+    startGrassGrowth();
 </script>
 
 </body>
