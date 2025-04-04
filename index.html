@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background: #121212; /* Dark background for a futuristic feel */
+            background: #121212; /* Dark background */
             color: #fff;
             margin: 0;
             padding: 0;
@@ -20,23 +20,30 @@
         .container {
             display: flex;
             justify-content: space-between;
+            gap: 20px;
             padding: 40px;
             border-radius: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0px 8px 32px rgba(0, 0, 0, 0.6);
+            max-width: 1200px;
+            width: 100%;
         }
         .game-area, .store {
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
-            padding: 20px;
+            padding: 30px;
             box-shadow: 0px 8px 20px rgba(0, 255, 255, 0.4);
             width: 45%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .game-area h2, .store h2 {
-            font-size: 2.5em;
-            color: #00ffd5;
+        h2, h3 {
+            font-size: 2.2em;
             text-align: center;
+            color: #00ffd5;
             text-shadow: 0px 0px 15px rgba(0, 255, 255, 0.5);
+            margin: 20px 0;
         }
         .button {
             background: linear-gradient(45deg, #00ffcc, #00aaff);
@@ -47,44 +54,41 @@
             cursor: pointer;
             font-size: 1.2em;
             transition: all 0.3s ease;
+            margin: 10px 0;
         }
         .button:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
             box-shadow: 0px 0px 25px rgba(0, 255, 255, 0.6);
-        }
-        .button:active {
-            transform: scale(1);
-            box-shadow: none;
         }
         .inventory, .market {
             margin-top: 20px;
-            font-size: 1.2em;
+            font-size: 1.1em;
             color: #00ffd5;
-        }
-        .section {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: #00aaff;
-        }
-        .section p {
             text-align: center;
-            font-weight: bold;
-            font-size: 1.5em;
         }
         #inventory-list {
             list-style: none;
             padding: 0;
+            font-size: 1.1em;
         }
         #inventory-list li {
             margin-bottom: 15px;
-            text-shadow: 0px 0px 10px rgba(0, 255, 255, 0.4);
+            color: #00aaff;
+            text-shadow: 0px 0px 10px rgba(0, 255, 255, 0.3);
+        }
+        .section {
+            margin-top: 20px;
+            color: #ff77ff;
+        }
+        .section p {
+            font-size: 1.3em;
+            font-weight: bold;
         }
         #grass-timer {
             color: #ffdd00;
         }
         #rice-count {
-            color: #ff77ff;
-            font-size: 1.3em;
+            font-size: 1.5em;
         }
     </style>
 </head>
@@ -95,10 +99,7 @@
     <div class="game-area">
         <h2>Peternakan</h2>
         <p>Uang: <span id="money">100</span> Uang</p>
-        <div>
-            <h3>Tanam Tanaman</h3>
-            <button class="button" onclick="plantCrop()">Tanam Padi</button>
-        </div>
+        <button class="button" onclick="plantCrop()">Tanam Padi</button>
         <div class="inventory">
             <h3>Inventory</h3>
             <ul id="inventory-list">
@@ -123,85 +124,77 @@
                 <li>Alat Penyiram (100 Uang)</li>
             </ul>
         </div>
-        <!-- Container untuk menampilkan jumlah padi terkumpul -->
         <div class="section">
             <h3>Jumlah Padi Terkumpul</h3>
             <p id="rice-count">Padi: 0</p>
         </div>
-        <div>
-            <button class="button" onclick="sellItem()">Jual Padi</button>
-        </div>
+        <button class="button" onclick="sellItem()">Jual Padi</button>
     </div>
 </div>
 
 <script>
-    let money = localStorage.getItem('money') ? parseInt(localStorage.getItem('money')) : 100;  // Default uang adalah 100
-    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];  // Memuat inventory atau membuat array kosong jika belum ada
-    let harvestedRice = JSON.parse(localStorage.getItem('harvestedRice')) || 0;  // Menyimpan hasil padi yang sudah dipanen
-    let grassTimer = 5; // Waktu tumbuh rumput (5 detik)
-    let grassGrowthInterval;
-
-    // Fungsi untuk membeli barang (bibit padi)
+    let money = localStorage.getItem('money') ? parseInt(localStorage.getItem('money')) : 100;
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    let harvestedRice = JSON.parse(localStorage.getItem('harvestedRice')) || 0;
+    let grassTimer = 5;
+    
+    // Fungsi untuk membeli bibit padi
     function buyItem() {
         if (money >= 50) {
-            money -= 50;  // Kurangi uang
-            inventory.push('Padi (Bibit)');  // Tambahkan bibit padi ke inventory
+            money -= 50;
+            inventory.push('Padi (Bibit)');
             updateUI();
-            saveToLocalStorage();  // Simpan perubahan ke localStorage
+            saveToLocalStorage();
         } else {
             alert('Uang tidak cukup untuk membeli Padi!');
         }
     }
 
-    // Fungsi untuk menanam tanaman
+    // Fungsi untuk menanam bibit padi
     function plantCrop() {
         if (inventory.includes('Padi (Bibit)')) {
-            inventory.splice(inventory.indexOf('Padi (Bibit)'), 1);  // Hapus bibit padi dari inventory
+            inventory.splice(inventory.indexOf('Padi (Bibit)'), 1);
             alert('Tanaman Padi telah ditanam!');
             updateUI();
-            saveToLocalStorage();  // Simpan perubahan ke localStorage
+            saveToLocalStorage();
         } else {
             alert('Anda belum membeli Bibit Padi!');
         }
     }
 
-    // Fungsi untuk otomatis memulai pertumbuhan rumput (grass)
+    // Fungsi untuk memulai pertumbuhan otomatis setiap 5 detik
     function startGrassGrowth() {
-        grassTimer = 5;  // Reset timer ke 5 detik
+        grassTimer = 5;
         document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
         
-        // Mengatur interval untuk pertumbuhan rumput otomatis setiap 5 detik
         setInterval(() => {
             grassTimer--;
             document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
             
             if (grassTimer <= 0) {
-                // Setelah timer selesai, berikan padi ke inventory
-                harvestedRice += 1;  // Menambah 1 padi ke hasil yang sudah dipanen
+                harvestedRice += 1;
                 alert('Rumput telah tumbuh! Anda mendapatkan 1 Padi.');
-                saveToLocalStorage();  // Simpan perubahan ke localStorage
-                
-                // Reset timer untuk pertumbuhan berikutnya
+                saveToLocalStorage();
                 grassTimer = 5;
             }
-        }, 5000);  // 5000ms = 5 detik
+        }, 5000);
     }
 
-    // Fungsi untuk menjual item (termasuk Padi)
+    // Fungsi untuk menjual padi
     function sellItem() {
         if (harvestedRice > 0) {
-            let moneyEarned = harvestedRice * 30;  // Menghitung uang yang didapat dari hasil padi
+            let moneyEarned = harvestedRice * 30;
             money += moneyEarned;
-            harvestedRice = 0;  // Mengosongkan hasil padi yang sudah dijual
-            alert('Anda telah menjual ' + moneyEarned / 30 + ' Padi! Mendapatkan ' + moneyEarned + ' Uang.');
+            harvestedRice = 0;
+            alert('Anda telah menjual ' + (moneyEarned / 30) + ' Padi! Mendapatkan ' + moneyEarned + ' Uang.');
             updateUI();
-            saveToLocalStorage();  // Simpan perubahan ke localStorage
+            saveToLocalStorage();
         } else {
             alert('Anda tidak memiliki Padi untuk dijual!');
         }
     }
 
-    // Fungsi untuk memperbarui tampilan uang dan inventory
+    // Fungsi untuk memperbarui UI
     function updateUI() {
         document.getElementById('money').innerText = money;
         const inventoryList = document.getElementById('inventory-list');
@@ -212,21 +205,18 @@
             inventoryList.appendChild(li);
         });
         
-        // Memperbarui jumlah padi yang sudah dipanen di Toko
         document.getElementById('rice-count').innerText = 'Padi: ' + harvestedRice;
     }
 
     // Fungsi untuk menyimpan data ke localStorage
     function saveToLocalStorage() {
-        localStorage.setItem('money', money);  // Menyimpan uang
-        localStorage.setItem('inventory', JSON.stringify(inventory));  // Menyimpan inventory
-        localStorage.setItem('harvestedRice', JSON.stringify(harvestedRice));  // Menyimpan hasil padi yang sudah dipanen
+        localStorage.setItem('money', money);
+        localStorage.setItem('inventory', JSON.stringify(inventory));
+        localStorage.setItem('harvestedRice', JSON.stringify(harvestedRice));
     }
 
-    // Inisialisasi UI dengan data dari localStorage
+    // Inisialisasi UI
     updateUI();
-
-    // Mulai otomatis pertumbuhan rumput saat halaman dimuat
     startGrassGrowth();
 </script>
 
