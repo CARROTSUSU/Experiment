@@ -1,136 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Staking Simulator - Futuristic</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Futuristic Farming Simulator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    body {
-      font-family: 'Arial', sans-serif;
-      background-color: #1a1a1a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #121212;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
 
-    .container {
-      text-align: center;
-    }
+        .container {
+            text-align: center;
+            width: 80%;
+        }
 
-    header h1 {
-      font-size: 3rem;
-      margin-bottom: 20px;
-      color: #00ff99;
-      text-shadow: 2px 2px 5px rgba(0, 255, 153, 0.5);
-    }
+        header h1 {
+            color: #00ff99;
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 5px rgba(0, 255, 153, 0.7);
+        }
 
-    .staking {
-      margin: 20px 0;
-    }
+        .farm {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
 
-    .staking-field {
-      width: 300px;
-      height: 150px;
-      background-color: #4caf50;
-      margin: 0 auto;
-      border-radius: 10px;
-      position: relative;
-      overflow: hidden;
-    }
+        .plot {
+            background-color: #1e1e1e;
+            border: 2px solid #00ff99;
+            padding: 50px;
+            border-radius: 10px;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
 
-    .staking-field.active {
-      background-color: #00ff00;
-    }
+        .plot p {
+            font-size: 1.5rem;
+            color: #00ff99;
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
 
-    button.action-button {
-      margin: 10px;
-      padding: 15px 25px;
-      font-size: 1.2rem;
-      background-color: #00ff99;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+        .plot:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
+        }
 
-    button.action-button:hover {
-      background-color: #00cc7a;
-    }
+        footer {
+            margin-top: 20px;
+        }
 
-    .stats {
-      margin-top: 20px;
-      font-size: 1.2rem;
-    }
+        button {
+            background-color: #00ff99;
+            border: none;
+            padding: 10px 20px;
+            color: #121212;
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 5px;
+        }
 
-    .stats p {
-      margin: 5px 0;
-    }
-  </style>
+        button:hover {
+            background-color: #00cc7a;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Futuristic Staking Simulator</h1>
-    </header>
+    <div class="container">
+        <header>
+            <h1>Futuristic Farming Simulator</h1>
+        </header>
+        <section class="farm">
+            <div class="grid">
+                <!-- Example for 5 farm plots -->
+                <div class="plot" id="plot1" onclick="plantSeed(1)">
+                    <p>Plot 1</p>
+                </div>
+                <div class="plot" id="plot2" onclick="plantSeed(2)">
+                    <p>Plot 2</p>
+                </div>
+                <div class="plot" id="plot3" onclick="plantSeed(3)">
+                    <p>Plot 3</p>
+                </div>
+                <div class="plot" id="plot4" onclick="plantSeed(4)">
+                    <p>Plot 4</p>
+                </div>
+                <div class="plot" id="plot5" onclick="plantSeed(5)">
+                    <p>Plot 5</p>
+                </div>
+            </div>
+        </section>
+        <footer>
+            <button onclick="resetFarm()">Reset Farm</button>
+        </footer>
+    </div>
 
-    <section class="staking">
-      <div id="staking-field" class="staking-field"></div>
-      <button id="stakeButton" class="action-button">Stake Tokens</button>
-      <button id="claimButton" class="action-button">Claim Rewards</button>
-    </section>
+    <script>
+        // Function to simulate planting a seed
+        function plantSeed(plotId) {
+            const plot = document.getElementById(`plot${plotId}`);
+            plot.innerHTML = '<p>Growing...</p>'; // Change text to "Growing..." when seed is planted
+            plot.style.backgroundColor = '#004d33'; // Futuristic green color when planted
+            plot.style.borderColor = '#66ff33'; // Light green border
+        }
 
-    <section class="stats">
-      <div>
-        <p>Tokens Staked: <span id="tokensStaked">0</span></p>
-        <p>Rewards Claimed: <span id="rewardsClaimed">0</span></p>
-        <p>Interest Rate: <span id="interestRate">10%</span></p>
-      </div>
-    </section>
-  </div>
-
-  <script>
-    let tokensStaked = 0;
-    let rewardsClaimed = 0;
-    const interestRate = 0.1; // 10% interest rate for staking rewards
-
-    const stakeButton = document.getElementById("stakeButton");
-    const claimButton = document.getElementById("claimButton");
-    const stakingField = document.getElementById("staking-field");
-    const tokensStakedDisplay = document.getElementById("tokensStaked");
-    const rewardsClaimedDisplay = document.getElementById("rewardsClaimed");
-
-    stakeButton.addEventListener("click", function() {
-      const stakeAmount = Math.floor(Math.random() * 100) + 1; // Random staking amount between 1 and 100
-      tokensStaked += stakeAmount;
-      tokensStakedDisplay.textContent = tokensStaked;
-
-      stakingField.classList.add("active");
-      alert(`You staked ${stakeAmount} tokens!`);
-    });
-
-    claimButton.addEventListener("click", function() {
-      if (tokensStaked > 0) {
-        const rewards = tokensStaked * interestRate;
-        rewardsClaimed += rewards;
-        rewardsClaimedDisplay.textContent = rewardsClaimed.toFixed(2);
-        tokensStaked = 0;
-        tokensStakedDisplay.textContent = tokensStaked;
-        stakingField.classList.remove("active");
-        alert(`You claimed ${rewards.toFixed(2)} tokens in rewards!`);
-      } else {
-        alert("No tokens staked yet. Stake some tokens first!");
-      }
-    });
-  </script>
+        // Function to reset all the farm plots
+        function resetFarm() {
+            const plots = document.querySelectorAll('.plot');
+            plots.forEach(plot => {
+                plot.innerHTML = '<p>Empty Plot</p>'; // Reset to initial state
+                plot.style.backgroundColor = '#1e1e1e'; // Reset background color
+                plot.style.borderColor = '#00ff99'; // Reset border color
+            });
+        }
+    </script>
 </body>
 </html>
