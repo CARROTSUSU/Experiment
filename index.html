@@ -74,6 +74,9 @@
             inventory.push('Padi (Bibit)');  // Tambahkan bibit padi ke inventory
             updateUI();
             saveToLocalStorage();  // Simpan perubahan ke localStorage
+            
+            // Mulakan pertumbuhan rumput setelah membeli bibit
+            startGrassGrowth();
         } else {
             alert('Uang tidak cukup untuk membeli Padi!');
         }
@@ -84,12 +87,11 @@
         if (inventory.includes('Padi (Bibit)')) {
             inventory.splice(inventory.indexOf('Padi (Bibit)'), 1);  // Hapus bibit padi dari inventory
             alert('Tanaman Padi telah ditanam!');
-            
-            // Mulakan pertumbuhan rumput selepas menanam padi
-            startGrassGrowth();  // Memulakan pertumbuhan rumput
-            
             updateUI();
             saveToLocalStorage();  // Simpan perubahan ke localStorage
+            
+            // Mulakan pertumbuhan rumput setelah menanam padi
+            startGrassGrowth();
         } else {
             alert('Anda belum membeli Bibit Padi!');
         }
@@ -101,6 +103,10 @@
         document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
         
         // Mengatur interval untuk pertumbuhan rumput otomatis setiap 5 detik
+        if (grassGrowthInterval) {
+            clearInterval(grassGrowthInterval); // Clear previous interval jika ada
+        }
+        
         grassGrowthInterval = setInterval(() => {
             grassTimer--;
             document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
@@ -108,7 +114,6 @@
             if (grassTimer <= 0) {
                 // Setelah timer selesai, berikan padi ke inventory
                 harvestedRice += 1;  // Menambah 1 padi ke hasil yang sudah dipanen
-                // Hanya perbarui UI tanpa alert untuk pengalaman yang lebih baik
                 updateUI();
                 saveToLocalStorage();  // Simpan perubahan ke localStorage
                 
@@ -127,6 +132,9 @@
             alert('Anda telah menjual ' + moneyEarned / 30 + ' Padi! Mendapatkan ' + moneyEarned + ' Uang.');
             updateUI();
             saveToLocalStorage();  // Simpan perubahan ke localStorage
+            
+            // Mulakan pertumbuhan rumput setelah menjual padi
+            startGrassGrowth();
         } else {
             alert('Anda tidak memiliki Padi untuk dijual!');
         }
