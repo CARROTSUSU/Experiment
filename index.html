@@ -79,6 +79,10 @@
         if (inventory.includes('Padi (Bibit)')) {
             inventory.splice(inventory.indexOf('Padi (Bibit)'), 1);  // Hapus bibit padi dari inventory
             alert('Tanaman Padi telah ditanam!');
+            
+            // Mulakan pertumbuhan rumput selepas menanam padi
+            startGrassGrowth();  // Memulakan pertumbuhan rumput
+            
             updateUI();
             saveToLocalStorage();  // Simpan perubahan ke localStorage
         } else {
@@ -92,7 +96,7 @@
         document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
         
         // Mengatur interval untuk pertumbuhan rumput otomatis setiap 5 detik
-        setInterval(() => {
+        grassGrowthInterval = setInterval(() => {
             grassTimer--;
             document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
             
@@ -153,8 +157,6 @@
     // Inisialisasi UI dengan data dari localStorage
     updateUI();
 
-    // Mulai otomatis pertumbuhan rumput saat halaman dimuat
-    startGrassGrowth();
 </script>
 
 </body>
