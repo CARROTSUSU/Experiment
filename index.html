@@ -66,6 +66,7 @@
     let harvestedRice = JSON.parse(localStorage.getItem('harvestedRice')) || 0;  // Menyimpan hasil padi yang sudah dipanen
     let grassTimer = 5; // Waktu tumbuh rumput (5 detik)
     let grassGrowthInterval;
+    let grassGrowthStarted = false;  // Menandakan apakah pertumbuhan rumput sudah dimulai
 
     // Fungsi untuk membeli barang (bibit padi)
     function buyItem() {
@@ -75,8 +76,10 @@
             updateUI();
             saveToLocalStorage();  // Simpan perubahan ke localStorage
             
-            // Mulakan pertumbuhan rumput setelah membeli bibit
-            startGrassGrowth();
+            // Jika grass growth belum dimulai, mulai pertumbuhan rumput
+            if (!grassGrowthStarted) {
+                startGrassGrowth();
+            }
         } else {
             alert('Uang tidak cukup untuk membeli Padi!');
         }
@@ -90,8 +93,10 @@
             updateUI();
             saveToLocalStorage();  // Simpan perubahan ke localStorage
             
-            // Mulakan pertumbuhan rumput setelah menanam padi
-            startGrassGrowth();
+            // Mulakan pertumbuhan rumput jika belum dimulai
+            if (!grassGrowthStarted) {
+                startGrassGrowth();
+            }
         } else {
             alert('Anda belum membeli Bibit Padi!');
         }
@@ -99,6 +104,7 @@
 
     // Fungsi untuk otomatis memulai pertumbuhan rumput (grass)
     function startGrassGrowth() {
+        grassGrowthStarted = true;  // Tandai bahwa pertumbuhan rumput telah dimulai
         grassTimer = 5;  // Reset timer ke 5 detik
         document.getElementById('grass-timer').innerText = 'Waktu Tumbuh: ' + grassTimer + 's';
         
@@ -132,9 +138,6 @@
             alert('Anda telah menjual ' + moneyEarned / 30 + ' Padi! Mendapatkan ' + moneyEarned + ' Uang.');
             updateUI();
             saveToLocalStorage();  // Simpan perubahan ke localStorage
-            
-            // Mulakan pertumbuhan rumput setelah menjual padi
-            startGrassGrowth();
         } else {
             alert('Anda tidak memiliki Padi untuk dijual!');
         }
@@ -180,6 +183,7 @@
                 money = 100;
                 inventory = [];
                 harvestedRice = 0;
+                grassGrowthStarted = false;  // Reset status grass growth
                 alert('Permainan telah direset!');
                 updateUI();
             }
