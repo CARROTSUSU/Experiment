@@ -79,39 +79,37 @@
 </div>
 
 <script>
-    let money = 100;  // Starting money
-    let inventory = [];  // Items in inventory
+    // Memuat data dari localStorage
+    let money = localStorage.getItem('money') ? parseInt(localStorage.getItem('money')) : 100;  // Default uang adalah 100
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];  // Memuat inventory atau membuat array kosong jika belum ada
 
-    // Function to buy an item (Planting seeds or buying items from the store)
+    // Fungsi untuk membeli barang (bibit padi)
     function buyItem() {
         if (money >= 50) {
-            money -= 50;  // Deduct money for purchasing an item
-            updateMoneyDisplay();
-            inventory.push('Padi (Bibit)');
-            updateInventory();
+            money -= 50;  // Kurangi uang
+            inventory.push('Padi (Bibit)');  // Tambahkan bibit padi ke inventory
+            updateUI();
+            saveToLocalStorage();  // Simpan perubahan ke localStorage
         } else {
             alert('Uang tidak cukup untuk membeli Padi!');
         }
     }
 
-    // Function to plant a crop
+    // Fungsi untuk menanam tanaman
     function plantCrop() {
         if (inventory.includes('Padi (Bibit)')) {
-            inventory.splice(inventory.indexOf('Padi (Bibit)'), 1);  // Remove the seed from inventory
+            inventory.splice(inventory.indexOf('Padi (Bibit)'), 1);  // Hapus bibit padi dari inventory
             alert('Tanaman Padi telah ditanam!');
-            updateInventory();
+            updateUI();
+            saveToLocalStorage();  // Simpan perubahan ke localStorage
         } else {
             alert('Anda belum membeli Bibit Padi!');
         }
     }
 
-    // Update money display
-    function updateMoneyDisplay() {
+    // Fungsi untuk memperbarui tampilan uang dan inventory
+    function updateUI() {
         document.getElementById('money').innerText = money;
-    }
-
-    // Update inventory list display
-    function updateInventory() {
         const inventoryList = document.getElementById('inventory-list');
         inventoryList.innerHTML = '';
         inventory.forEach(item => {
@@ -120,6 +118,15 @@
             inventoryList.appendChild(li);
         });
     }
+
+    // Fungsi untuk menyimpan data ke localStorage
+    function saveToLocalStorage() {
+        localStorage.setItem('money', money);  // Menyimpan uang
+        localStorage.setItem('inventory', JSON.stringify(inventory));  // Menyimpan inventory
+    }
+
+    // Inisialisasi UI dengan data dari localStorage
+    updateUI();
 </script>
 
 </body>
