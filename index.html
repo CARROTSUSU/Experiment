@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Farming Simulator - Futuristic</title>
+  <title>Staking Simulator - Futuristic</title>
   <style>
     * {
       margin: 0;
@@ -33,21 +33,21 @@
       text-shadow: 2px 2px 5px rgba(0, 255, 153, 0.5);
     }
 
-    .farm {
+    .staking {
       margin: 20px 0;
     }
 
-    .grass-field {
+    .staking-field {
       width: 300px;
       height: 150px;
-      background-color: #228B22;
+      background-color: #4caf50;
       margin: 0 auto;
       border-radius: 10px;
       position: relative;
       overflow: hidden;
     }
 
-    .grass-field.active {
+    .staking-field.active {
       background-color: #00ff00;
     }
 
@@ -80,52 +80,55 @@
 <body>
   <div class="container">
     <header>
-      <h1>Futuristic Farming Simulator</h1>
+      <h1>Futuristic Staking Simulator</h1>
     </header>
 
-    <section class="farm">
-      <div id="grass-field" class="grass-field"></div>
-      <button id="plantButton" class="action-button">Plant Grass</button>
-      <button id="harvestButton" class="action-button">Harvest Grass</button>
+    <section class="staking">
+      <div id="staking-field" class="staking-field"></div>
+      <button id="stakeButton" class="action-button">Stake Tokens</button>
+      <button id="claimButton" class="action-button">Claim Rewards</button>
     </section>
 
     <section class="stats">
       <div>
-        <p>Grass Planted: <span id="grassPlanted">0</span></p>
-        <p>Grass Harvested: <span id="grassHarvested">0</span></p>
+        <p>Tokens Staked: <span id="tokensStaked">0</span></p>
+        <p>Rewards Claimed: <span id="rewardsClaimed">0</span></p>
+        <p>Interest Rate: <span id="interestRate">10%</span></p>
       </div>
     </section>
   </div>
 
   <script>
-    let grassPlanted = 0;
-    let grassHarvested = 0;
+    let tokensStaked = 0;
+    let rewardsClaimed = 0;
+    const interestRate = 0.1; // 10% interest rate for staking rewards
 
-    const plantButton = document.getElementById("plantButton");
-    const harvestButton = document.getElementById("harvestButton");
-    const grassField = document.getElementById("grass-field");
-    const grassPlantedDisplay = document.getElementById("grassPlanted");
-    const grassHarvestedDisplay = document.getElementById("grassHarvested");
+    const stakeButton = document.getElementById("stakeButton");
+    const claimButton = document.getElementById("claimButton");
+    const stakingField = document.getElementById("staking-field");
+    const tokensStakedDisplay = document.getElementById("tokensStaked");
+    const rewardsClaimedDisplay = document.getElementById("rewardsClaimed");
 
-    plantButton.addEventListener("click", function() {
-      if (!grassField.classList.contains("active")) {
-        grassField.classList.add("active");
-        grassPlanted++;
-        grassPlantedDisplay.textContent = grassPlanted;
-        alert("Grass Planted!");
-      } else {
-        alert("Grass is already planted. Wait for it to grow!");
-      }
+    stakeButton.addEventListener("click", function() {
+      const stakeAmount = Math.floor(Math.random() * 100) + 1; // Random staking amount between 1 and 100
+      tokensStaked += stakeAmount;
+      tokensStakedDisplay.textContent = tokensStaked;
+
+      stakingField.classList.add("active");
+      alert(`You staked ${stakeAmount} tokens!`);
     });
 
-    harvestButton.addEventListener("click", function() {
-      if (grassField.classList.contains("active")) {
-        grassField.classList.remove("active");
-        grassHarvested++;
-        grassHarvestedDisplay.textContent = grassHarvested;
-        alert("Grass Harvested!");
+    claimButton.addEventListener("click", function() {
+      if (tokensStaked > 0) {
+        const rewards = tokensStaked * interestRate;
+        rewardsClaimed += rewards;
+        rewardsClaimedDisplay.textContent = rewardsClaimed.toFixed(2);
+        tokensStaked = 0;
+        tokensStakedDisplay.textContent = tokensStaked;
+        stakingField.classList.remove("active");
+        alert(`You claimed ${rewards.toFixed(2)} tokens in rewards!`);
       } else {
-        alert("No grass to harvest yet. Plant some first!");
+        alert("No tokens staked yet. Stake some tokens first!");
       }
     });
   </script>
