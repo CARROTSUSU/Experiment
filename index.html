@@ -61,6 +61,11 @@
                 <!-- List of items will be populated here -->
             </ul>
         </div>
+        <!-- Tombol untuk menjual padi -->
+        <div>
+            <h3>Jual Padi</h3>
+            <button class="button" onclick="sellRice()">Jual Padi</button>
+        </div>
     </div>
 
     <!-- Store (Market) -->
@@ -104,6 +109,20 @@
             saveToLocalStorage();  // Simpan perubahan ke localStorage
         } else {
             alert('Anda belum membeli Bibit Padi!');
+        }
+    }
+
+    // Fungsi untuk menjual padi
+    function sellRice() {
+        let riceCount = inventory.filter(item => item === 'Padi').length;  // Menghitung jumlah padi yang ada di inventory
+        if (riceCount > 0) {
+            inventory = inventory.filter(item => item !== 'Padi');  // Hapus padi dari inventory
+            money += riceCount * 30;  // Menambahkan uang (30 uang per padi)
+            alert('Anda telah menjual ' + riceCount + ' Padi! Mendapatkan ' + (riceCount * 30) + ' Uang.');
+            updateUI();
+            saveToLocalStorage();  // Simpan perubahan ke localStorage
+        } else {
+            alert('Anda tidak memiliki Padi untuk dijual!');
         }
     }
 
