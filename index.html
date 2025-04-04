@@ -5,46 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farming Simulator</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-        }
-        .game-area {
-            flex: 2;
-            background-color: #e0e0e0;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .store {
-            flex: 1;
-            background-color: #d0d0d0;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .inventory, .market {
-            margin-top: 20px;
-        }
-        .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-        .section {
-            margin-top: 20px;
-        }
     </style>
 </head>
 <body>
@@ -166,13 +126,19 @@
     // Fungsi untuk memperbarui tampilan uang dan inventory
     function updateUI() {
         document.getElementById('money').innerText = money;
+        
+        // Update inventory hanya menampilkan jumlah bibit padi
         const inventoryList = document.getElementById('inventory-list');
         inventoryList.innerHTML = '';
+        let riceSeedsCount = 0;
         inventory.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item;
-            inventoryList.appendChild(li);
+            if (item === 'Padi (Bibit)') {
+                riceSeedsCount++;
+            }
         });
+        const li = document.createElement('li');
+        li.textContent = `Bibit Padi: ${riceSeedsCount}`;
+        inventoryList.appendChild(li);
         
         // Memperbarui jumlah padi yang sudah dipanen di Toko
         document.getElementById('rice-count').innerText = 'Padi: ' + harvestedRice;
