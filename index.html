@@ -108,7 +108,8 @@
             if (grassTimer <= 0) {
                 // Setelah timer selesai, berikan padi ke inventory
                 harvestedRice += 1;  // Menambah 1 padi ke hasil yang sudah dipanen
-                alert('Rumput telah tumbuh! Anda mendapatkan 1 Padi.');
+                // Hanya perbarui UI tanpa alert untuk pengalaman yang lebih baik
+                updateUI();
                 saveToLocalStorage();  // Simpan perubahan ke localStorage
                 
                 // Reset timer untuk pertumbuhan berikutnya
