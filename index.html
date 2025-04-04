@@ -104,6 +104,7 @@
     function plantCrop() {
         if (inventory.includes('Padi (Bibit)')) {
             inventory.splice(inventory.indexOf('Padi (Bibit)'), 1);  // Hapus bibit padi dari inventory
+            inventory.push('Padi');  // Tambahkan padi yang sudah ditanam ke inventory
             alert('Tanaman Padi telah ditanam!');
             updateUI();
             saveToLocalStorage();  // Simpan perubahan ke localStorage
