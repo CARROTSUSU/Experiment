@@ -4,45 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farming Simulator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-        }
-        .game-area {
-            flex: 2;
-            background-color: #e0e0e0;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .store {
-            flex: 1;
-            background-color: #d0d0d0;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .inventory, .market {
-            margin-top: 20px;
-        }
-        .button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css"> <!-- Menghubungkan file CSS -->
 </head>
 <body>
 
@@ -51,10 +13,9 @@
     <div class="game-area">
         <h2>Peternakan</h2>
         <p>Uang: <span id="money">100</span> Uang</p>
-        <div>
-            <h3>Tanam Tanaman</h3>
-            <button class="button" onclick="plantCrop()">Tanam Padi</button>
-        </div>
+        <h3>Tanam Tanaman</h3>
+        <button class="button" onclick="plantCrop()">Tanam Padi</button>
+        
         <div class="inventory">
             <h3>Inventory</h3>
             <ul id="inventory-list">
@@ -87,7 +48,6 @@ let inventory = JSON.parse(localStorage.getItem('inventory')) || [];  // Memuat 
 function buyItem() {
     if (money >= 50) {
         money -= 50;  // Kurangi uang
-        // Tambahkan satu bibit padi ke inventory
         inventory.push('Padi (Bibit)');  // Menambah satu item bibit padi ke inventory
         updateUI();  // Memperbarui tampilan UI
         saveToLocalStorage();  // Menyimpan perubahan ke localStorage
