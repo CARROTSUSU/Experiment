@@ -1,0 +1,70 @@
+/* Styling untuk body dan container utama */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* Styling untuk game area */
+.game-area {
+    flex: 2;
+    background-color: #e0e0e0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Styling untuk store */
+.store {
+    flex: 1;
+    background-color: #d0d0d0;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Styling untuk inventory dan market */
+.inventory, .market {
+    margin-top: 20px;
+}
+
+/* Styling untuk tombol */
+.button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin-top: 10px;
+    width: 100%;
+}
+
+.button:hover {
+    background-color: #45a049;
+}
+
+/* Styling untuk judul */
+h2 {
+    text-align: center;
+}
+
+/* Styling untuk daftar inventory */
+#inventory-list {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+#inventory-list li {
+    background-color: #fff;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
