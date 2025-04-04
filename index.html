@@ -3,132 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Futuristic Farming Simulator</title>
+    <title>Farming Simulator</title>
     <style>
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background: #121212;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
         .container {
-            text-align: center;
-            width: 80%;
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
         }
-
-        header h1 {
-            color: #00ff99;
-            font-size: 3rem;
-            margin-bottom: 2rem;
-            text-shadow: 2px 2px 5px rgba(0, 255, 153, 0.7);
-        }
-
-        .farm {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-        }
-
-        .plot {
-            background-color: #1e1e1e;
-            border: 2px solid #00ff99;
-            padding: 50px;
+        .game-area {
+            flex: 2;
+            background-color: #e0e0e0;
+            padding: 20px;
             border-radius: 10px;
-            position: relative;
-            transition: transform 0.3s ease;
         }
-
-        .plot p {
-            font-size: 1.5rem;
-            color: #00ff99;
-            position: absolute;
-            bottom: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+        .store {
+            flex: 1;
+            background-color: #d0d0d0;
+            padding: 20px;
+            border-radius: 10px;
         }
-
-        .plot:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 15px rgba(0, 255, 153, 0.7);
-        }
-
-        footer {
+        .inventory, .market {
             margin-top: 20px;
         }
-
-        button {
-            background-color: #00ff99;
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
             border: none;
-            padding: 10px 20px;
-            color: #121212;
-            font-size: 1rem;
-            cursor: pointer;
             border-radius: 5px;
+            cursor: pointer;
         }
-
-        button:hover {
-            background-color: #00cc7a;
+        .button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Futuristic Farming Simulator</h1>
-        </header>
-        <section class="farm">
-            <div class="grid">
-                <!-- Example for 5 farm plots -->
-                <div class="plot" id="plot1" onclick="plantSeed(1)">
-                    <p>Plot 1</p>
-                </div>
-                <div class="plot" id="plot2" onclick="plantSeed(2)">
-                    <p>Plot 2</p>
-                </div>
-                <div class="plot" id="plot3" onclick="plantSeed(3)">
-                    <p>Plot 3</p>
-                </div>
-                <div class="plot" id="plot4" onclick="plantSeed(4)">
-                    <p>Plot 4</p>
-                </div>
-                <div class="plot" id="plot5" onclick="plantSeed(5)">
-                    <p>Plot 5</p>
-                </div>
-            </div>
-        </section>
-        <footer>
-            <button onclick="resetFarm()">Reset Farm</button>
-        </footer>
+
+<div class="container">
+    <!-- Game Area -->
+    <div class="game-area">
+        <h2>Peternakan</h2>
+        <p>Uang: <span id="money">100</span> Uang</p>
+        <div>
+            <h3>Tanam Tanaman</h3>
+            <button class="button" onclick="plantCrop()">Tanam Padi</button>
+        </div>
+        <div class="inventory">
+            <h3>Inventory</h3>
+            <ul id="inventory-list">
+                <!-- List of items will be populated here -->
+            </ul>
+        </div>
     </div>
 
-    <script>
-        // Function to simulate planting a seed
-        function plantSeed(plotId) {
-            const plot = document.getElementById(`plot${plotId}`);
-            plot.innerHTML = '<p>Growing...</p>'; // Change text to "Growing..." when seed is planted
-            plot.style.backgroundColor = '#004d33'; // Futuristic green color when planted
-            plot.style.borderColor = '#66ff33'; // Light green border
-        }
+    <!-- Store (Market) -->
+    <div class="store">
+        <h2>Toko</h2>
+        <h3>Beli Alat</h3>
+        <button class="button" onclick="buyItem()">Beli Bibit Padi (50 Uang)</button>
+        <div class="market">
+            <h3>Barang di Toko</h3>
+            <ul>
+                <li>Padi (50 Uang)</li>
+                <li>Alat Penyiram (100 Uang)</li>
+            </ul>
+        </div>
+    </div>
+</div>
 
-        // Function to reset all the farm plots
-        function resetFarm() {
-            const plots = document.querySelectorAll('.plot');
-            plots.forEach(plot => {
-                plot.innerHTML = '<p>Empty Plot</p>'; // Reset to initial state
-                plot.style.backgroundColor = '#1e1e1e'; // Reset background color
-                plot.style.borderColor = '#00ff99'; // Reset border color
-            });
+<script>
+    let money = 100;  // Starting money
+    let inventory = [];  // Items in inventory
+
+    // Function to buy an item (Planting seeds or buying items from the store)
+    function buyItem() {
+        if (money >= 50) {
+            money -= 50;  // Deduct money for purchasing an item
+            updateMoneyDisplay();
+            inventory.push('Padi (Bibit)');
+            updateInventory();
+        } else {
+            alert('Uang tidak cukup untuk membeli Padi!');
         }
-    </script>
+    }
+
+    // Function to plant a crop
+    function plantCrop() {
+        if (inventory.includes('Padi (Bibit)')) {
+            inventory.splice(inventory.indexOf('Padi (Bibit)'), 1);  // Remove the seed from inventory
+            alert('Tanaman Padi telah ditanam!');
+            updateInventory();
+        } else {
+            alert('Anda belum membeli Bibit Padi!');
+        }
+    }
+
+    // Update money display
+    function updateMoneyDisplay() {
+        document.getElementById('money').innerText = money;
+    }
+
+    // Update inventory list display
+    function updateInventory() {
+        const inventoryList = document.getElementById('inventory-list');
+        inventoryList.innerHTML = '';
+        inventory.forEach(item => {
+            const li = document.createElement('li');
+            li.textContent = item;
+            inventoryList.appendChild(li);
+        });
+    }
+</script>
+
 </body>
 </html>
