@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Farming Simulator - Futuristic</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #1a1a1a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: #00ff99;
+      text-shadow: 2px 2px 5px rgba(0, 255, 153, 0.5);
+    }
+
+    .farm {
+      margin: 20px 0;
+    }
+
+    .grass-field {
+      width: 300px;
+      height: 150px;
+      background-color: #228B22;
+      margin: 0 auto;
+      border-radius: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .grass-field.active {
+      background-color: #00ff00;
+    }
+
+    button.action-button {
+      margin: 10px;
+      padding: 15px 25px;
+      font-size: 1.2rem;
+      background-color: #00ff99;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button.action-button:hover {
+      background-color: #00cc7a;
+    }
+
+    .stats {
+      margin-top: 20px;
+      font-size: 1.2rem;
+    }
+
+    .stats p {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Futuristic Farming Simulator</h1>
+    </header>
+
+    <section class="farm">
+      <div id="grass-field" class="grass-field"></div>
+      <button id="plantButton" class="action-button">Plant Grass</button>
+      <button id="harvestButton" class="action-button">Harvest Grass</button>
+    </section>
+
+    <section class="stats">
+      <div>
+        <p>Grass Planted: <span id="grassPlanted">0</span></p>
+        <p>Grass Harvested: <span id="grassHarvested">0</span></p>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let grassPlanted = 0;
+    let grassHarvested = 0;
+
+    const plantButton = document.getElementById("plantButton");
+    const harvestButton = document.getElementById("harvestButton");
+    const grassField = document.getElementById("grass-field");
+    const grassPlantedDisplay = document.getElementById("grassPlanted");
+    const grassHarvestedDisplay = document.getElementById("grassHarvested");
+
+    plantButton.addEventListener("click", function() {
+      if (!grassField.classList.contains("active")) {
+        grassField.classList.add("active");
+        grassPlanted++;
+        grassPlantedDisplay.textContent = grassPlanted;
+        alert("Grass Planted!");
+      } else {
+        alert("Grass is already planted. Wait for it to grow!");
+      }
+    });
+
+    harvestButton.addEventListener("click", function() {
+      if (grassField.classList.contains("active")) {
+        grassField.classList.remove("active");
+        grassHarvested++;
+        grassHarvestedDisplay.textContent = grassHarvested;
+        alert("Grass Harvested!");
+      } else {
+        alert("No grass to harvest yet. Plant some first!");
+      }
+    });
+  </script>
+</body>
+</html>
