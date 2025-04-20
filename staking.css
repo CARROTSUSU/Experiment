@@ -1,0 +1,39 @@
+
+.staking-cards {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 15px;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 12px rgba(0, 255, 255, 0.6);
+}
+
+.card h3 {
+  color: #fff;
+  font-size: 1.5rem;
+}
+
+.card p {
+  color: #fff;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+.card:nth-child(1) { border: 2px solid #cd7f32; } /* Bronze */
+.card:nth-child(2) { border: 2px solid #C0C0C0; } /* Silver */
+.card:nth-child(3) { border: 2px solid #FFD700; } /* Gold */
+.card:nth-child(4) { border: 2px solid #0ff; } /* Quantum */
